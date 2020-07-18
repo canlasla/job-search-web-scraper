@@ -9,13 +9,20 @@ soup=BeautifulSoup(page.content, 'html.parser')
 results=soup.find(id='ResultsContainer')
 jobElements=results.find_all('section', class_='card-content')
 
-for jE in jobElements:
-    title_elem = jE.find('h2', class_='title')
-    company_elem = jE.find('div', class_='company')
-    location_elem = jE.find('div', class_='location')
-    time_elem =jE.find('time')
-    print(title_elem)
-    print(company_elem)
-    print(location_elem)
-    print(time_elem)
+for elem in jobElements:
+    linkElem = elem.find('a')
+    titleElem = elem.find('h2', class_='title')
+    companyElem= elem.find('div', class_='company')
+    locationElem = elem.find('div', class_='location')
+    timeElem =elem.find('time')
+
+    if None in (linkElem, titleElem, companyElem, locationElem,timeElem):
+        continue
+
+    link=linkElem['href']
+    print(titleElem.text.strip())
+    print(companyElem.text.strip())
+    print(locationElem.text.strip())
+    print(timeElem.text.strip())
+    print(f"Apply here: {link}\n")
     print()
