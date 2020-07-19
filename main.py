@@ -10,11 +10,17 @@ soup=BeautifulSoup(page.content, 'html.parser')
 results=soup.find(id='ResultsContainer')
 jobElements=results.find_all('section', class_='card-content')
 
+with open('jobs.csv', mode='w', newline='') as jobs:
+# with open('jobs.csv', mode='a', newline='') as jobs:
 
-
-with open('jobs.csv', mode='w') as jobs:
+    job_writer = csv.writer(jobs, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    job_writer.writerow(['Posted', 'Title', 'Company', 'Location', 'Link'])
 
     for elem in jobElements:
+
+        if((elem.find('h2', string=lambda text: 'engineer' in text.lower()) is None) and (elem.find('h2', string=lambda text: 'developer' in text.lower()) is None)):
+            continue
+
         linkElem = elem.find('a')
         titleElem = elem.find('h2', class_='title')
         companyElem= elem.find('div', class_='company')
@@ -31,6 +37,5 @@ with open('jobs.csv', mode='w') as jobs:
         time=timeElem.text.strip()
 
 
-        employee_writer = csv.writer(jobs, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-        employee_writer.writerow([time, title, company, location, link])
+        job_writer = csv.writer(jobs, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        job_writer.writerow([time, title, company, location, link])
