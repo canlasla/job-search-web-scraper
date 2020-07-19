@@ -3,8 +3,10 @@ from bs4 import BeautifulSoup
 import xlwt
 import xlrd
 from xlutils.copy import copy
-
 from datetime import datetime
+
+dateStyle = xlwt.easyxf(num_format_str='HH:MM, DD-MMM-YYYY')
+appliedStyle = xlwt.easyxf('pattern: pattern solid, fore_colour red;')
 
 rb = xlrd.open_workbook('jobs.xls',formatting_info=True)
 rs = rb.sheet_by_index(0) 
@@ -23,8 +25,7 @@ jobElements=results.find_all('section', class_='card-content')
 
 for elem in jobElements:
 
-
-    if((elem.find('h2', string=lambda text: 'engineer' in text.lower()) is None) and (elem.find('h2', string=lambda text: 'developer' in text.lower()) is None)):
+    if((elem.find('h2', string=lambda text: 'intern' in text.lower()) is None) and (elem.find('h2', string=lambda text: 'developer' in text.lower()) is None)):
         continue
 
     linkElem = elem.find('a')
@@ -47,11 +48,10 @@ for elem in jobElements:
     ws.write(row, 2, company)
     ws.write(row, 3, location)
     ws.write(row, 4, link)
-    ws.write(row, 5, datetime.now())
+    ws.write(row, 5, datetime.now(), dateStyle)
+    ws.write(row, 6, 'Not Applied', appliedStyle)
 
     row+=1
-
-
 
 wb.save('jobs.xls')
 
